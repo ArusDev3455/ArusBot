@@ -18,6 +18,7 @@ const mongoCl = new MongoClient(uri);
 
 const app = express();
 app.get('/', (req, res) => {
+  console.log('UptimeRobotによるアクセスを受け取りました');
   res.send('Bot is alive!');
 });
 
