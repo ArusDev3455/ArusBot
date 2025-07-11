@@ -16,7 +16,7 @@ const client = new Client({
 const uri = process.env.MONGODB_URI;
 const mongoCl = new MongoClient(uri);
 
-const VERSION = "1.0.4E"
+const VERSION = "1.0.5E"
 
 const app = express();
 app.get('/', (req, res) => {
@@ -275,6 +275,7 @@ client.on("voiceStateUpdate",async (oldState,newState) => {
     console.log("ArusBotのログインを試行します");
     console.log("トークンの整合性チェック：",process.env.TOKEN ? "トークンは有効です" : "トークンが無効です");
     await client.login(process.env.TOKEN);
+    console.log("ログイン処理を実行しました。引き続き初期化処理に移行します");
   } catch(e) {
     console.log(`ログイン処理に失敗しました：${e}`);
     console.log("----------------------------------------------------------------");
