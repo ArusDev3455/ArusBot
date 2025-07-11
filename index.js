@@ -16,6 +16,8 @@ const client = new Client({
 const uri = process.env.MONGODB_URI;
 const mongoCl = new MongoClient(uri);
 
+const VERSION = "1.0.1E"
+
 const app = express();
 app.get('/', (req, res) => {
   console.log('UptimeRobotによるアクセスを受け取りました');
@@ -132,6 +134,8 @@ client.once('ready', () => {
       systemData.ftStart = false;
       systemData.isBusy = false;
       console.log("データ構築完了："+ JSON.stringify(systemData,null,2));
+      console.log(`ArusBotはバージョン${VERSION}として起動が完了しました。`);
+      console.log("----------------------------------------------------------------");
     }
     onceRun();
   }
@@ -198,6 +202,7 @@ client.on('messageCreate', (message) => {
       systemData.isBusy = false;
       message.reply("このサーバーのArusBotの設定を更新したよ！");
       console.log("現在のデータ："+ JSON.stringify(systemData,null,2));
+      console.log("----------------------------------------------------------------");
     })();
   }
 });
@@ -219,15 +224,16 @@ client.on("voiceStateUpdate",async (oldState,newState) => {
   if(!(oldState.channelId !== newState.channelId)){return;}
   if(oldState.channel){
     if(oldState.member.user.bot){return;}
+    console.log("退出検知");
     const gId = oldState.channel.guildId;
     if(!(serverCheck(gId))){
       console.log("未登録のサーバーからのリクエストのため拒否しました");
+      console.log("----------------------------------------------------------------");
       return;
     }
     const cId = systemData.serverData[gId].sayChannel;
     
-    console.log("退出検知");
-    console.log(`退出したサーバー：${oldState.channel.name}`);
+    console.log(`退出したチャンネル：${oldState.channel.name}`);
     console.log(`退出した人：${oldState.member.displayName}`);
     let ch = client.channels.cache.get(cId);
     if(!(ch)){
@@ -237,18 +243,20 @@ client.on("voiceStateUpdate",async (oldState,newState) => {
     if(oldState.channel.members.size === 0){
       await ch.send(`｢${oldState.channel.name}｣の通話が終了したよ！`);
     }
+    console.log("----------------------------------------------------------------");
   }
   if(newState.channel){
     if(newState.member.user.bot){return;}
+    console.log("入室検知");
     const gId = newState.channel.guildId;
     if(!(serverCheck(gId))){
       console.log("未登録のサーバーからのリクエストのため拒否しました");
+      console.log("----------------------------------------------------------------");
       return;
     }
     const cId = systemData.serverData[gId].sayChannel;
     
-    console.log("入室検知");
-    console.log(`入室したサーバー：${newState.channel.name}`);
+    console.log(`入室したチャンネル：${newState.channel.name}`);
     console.log(`入室した人：${newState.member.displayName}`);
     let ch = client.channels.cache.get(cId);
     if(!(ch)){
@@ -258,6 +266,7 @@ client.on("voiceStateUpdate",async (oldState,newState) => {
       await ch.send(`｢${newState.channel.name}｣の通話が開始したよ！`);
     }
     await ch.send(`${newState.member.displayName}さんが｢${newState.channel.name}｣に入室したよ！`);
+    console.log("----------------------------------------------------------------");
   }
 });
 
