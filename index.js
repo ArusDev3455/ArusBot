@@ -16,7 +16,7 @@ const client = new Client({
 const uri = process.env.MONGODB_URI;
 const mongoCl = new MongoClient(uri);
 
-const VERSION = "1.0.2E"
+const VERSION = "1.0.3E"
 
 const app = express();
 app.get('/', (req, res) => {
@@ -272,6 +272,7 @@ client.on("voiceStateUpdate",async (oldState,newState) => {
 
 (async function (){
   try {
+    console.log("ArusBotのログインを試行します");
     await client.login(process.env.TOKEN);
   } catch(e) {
     console.log(`ログイン処理に失敗しました：${e}`);
